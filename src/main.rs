@@ -12,11 +12,12 @@ use walkdir::WalkDir;
 use regex::Regex;
 use ansi_term::Colour;
 
-static USAGE: &'static str = "Usage: tag <path>";
+static USAGE: &'static str = "Usage: auto-tag [--dry-run] <path>";
 
 #[derive(RustcDecodable)]
 struct Args
 {
+    flag_dry_run: bool,
     arg_path: String,
 }
 
@@ -46,15 +47,30 @@ fn main()
         if extension == OsStr::new("mp3") {
             print!("{:?}: ", entry.path());
 
-            match write_tags(entry.path()) {
-                Ok(_) => println!("{}", Colour::Green.paint("ok")),
-                Err(e) => println!("{} ({})", Colour::Red.paint("failed"), e),
+            let mut tag = match get_tag(entry.path()) {
+                Ok(tag) => tag,
+                Err(e) => {
+                    println!("{} ({})", Colour::Red.paint("failed"), e);
+                    continue;
+                },
             };
+
+            if !args.flag_dry_run {
+                match tag.write_to_path(entry.path()) {
+                    Ok(_) => (),
+                    Err(e) => {
+                        println!("{} ({})", Colour::Red.paint("failed"), e);
+                        continue;
+                    },
+                };
+            }
+
+            println!("{}", Colour::Green.paint("ok"));
         }
     }
 }
 
-fn write_tags(path: &std::path::Path) -> Result<(), String>
+fn get_tag(path: &std::path::Path) -> Result<Tag, String>
 {
     let mut tag = Tag::new();
 
@@ -86,8 +102,5 @@ fn write_tags(path: &std::path::Path) -> Result<(), String>
         None => return Err(String::from("no track info")),
     };
 
-    match tag.write_to_path(path) {
-        Ok(_) => Ok(()),
-        Err(e) => Err(String::from(e.description)),
-    }
+    Ok(tag)
 }
