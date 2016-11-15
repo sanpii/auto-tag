@@ -72,7 +72,10 @@ fn main()
 
 fn get_tag(path: &std::path::Path) -> Result<Tag, String>
 {
-    let mut tag = Tag::new();
+    let mut tag = match Tag::read_from_path(path) {
+        Ok(tag) => tag,
+        Err(_) => Tag::new(),
+    };
 
     let regex = Regex::new(r"(?P<artist>[^/]+)/(?P<album>[^/]+)/(?P<track>\d+) - (?P<title>.+).mp3$")
         .unwrap();
