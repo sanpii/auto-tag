@@ -3,12 +3,14 @@ extern crate docopt;
 extern crate rustc_serialize;
 extern crate walkdir;
 extern crate regex;
+extern crate ansi_term;
 
 use id3::Tag;
 use std::ffi::OsStr;
 use docopt::Docopt;
 use walkdir::WalkDir;
 use regex::Regex;
+use ansi_term::Colour;
 
 static USAGE: &'static str = "Usage: tag <path>";
 
@@ -45,8 +47,8 @@ fn main()
             print!("{:?}: ", entry.path());
 
             match write_tags(entry.path()) {
-                Ok(_) => println!("ok"),
-                Err(e) => println!("failed ({})", e),
+                Ok(_) => println!("{}", Colour::Green.paint("ok")),
+                Err(e) => println!("{} ({})", Colour::Red.paint("failed"), e),
             };
         }
     }
