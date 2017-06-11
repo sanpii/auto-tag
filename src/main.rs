@@ -1,6 +1,8 @@
 extern crate id3;
 extern crate docopt;
-extern crate rustc_serialize;
+#[macro_use]
+extern crate serde_derive;
+extern crate serde;
 extern crate walkdir;
 extern crate regex;
 extern crate ansi_term;
@@ -14,7 +16,7 @@ use ansi_term::Colour;
 
 static USAGE: &'static str = "Usage: auto-tag [--dry-run] <path>";
 
-#[derive(RustcDecodable)]
+#[derive(Deserialize)]
 struct Args
 {
     flag_dry_run: bool,
@@ -28,7 +30,7 @@ fn main()
         Err(e) => e.exit(),
     };
 
-    let args: Args = match docopt.decode() {
+    let args: Args = match docopt.deserialize() {
         Ok(args) => args,
         Err(e) => e.exit(),
     };
