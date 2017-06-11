@@ -88,22 +88,22 @@ fn get_tag(path: &std::path::Path) -> Result<Tag, String>
     };
 
     match captures.name("artist") {
-        Some(artist) => tag.set_artist(artist),
+        Some(artist) => tag.set_artist(artist.as_str()),
         None => return Err(String::from("no artist info")),
     };
 
     match captures.name("album") {
-        Some(album) => tag.set_album(album),
+        Some(album) => tag.set_album(album.as_str()),
         None => return Err(String::from("no album info")),
     };
 
     match captures.name("title") {
-        Some(title) => tag.set_title(title),
+        Some(title) => tag.set_title(title.as_str()),
         None => return Err(String::from("no title info")),
     };
 
     match captures.name("track") {
-        Some(track) => tag.set_track(track.parse().unwrap()),
+        Some(track) => tag.set_track(track.as_str().parse().unwrap()),
         None => return Err(String::from("no track info")),
     };
 
