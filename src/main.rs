@@ -49,7 +49,7 @@ fn main()
         if extension == OsStr::new("mp3") {
             print!("{:?}: ", entry.path());
 
-            let mut tag = match get_tag(entry.path()) {
+            let tag = match get_tag(entry.path()) {
                 Ok(tag) => tag,
                 Err(e) => {
                     println!("{} ({})", Colour::Red.paint("failed"), e);
@@ -58,7 +58,7 @@ fn main()
             };
 
             if !args.flag_dry_run {
-                match tag.write_to_path(entry.path()) {
+                match tag.write_to_path(entry.path(), ::id3::Version::Id3v24) {
                     Ok(_) => (),
                     Err(e) => {
                         println!("{} ({})", Colour::Red.paint("failed"), e);
