@@ -44,15 +44,20 @@ fn main()
             Err(_) => continue,
         };
 
-        let extension = match entry.path().extension() {
+        let path = match entry.path().canonicalize() {
+            Ok(p) => p,
+            Err(_) => continue,
+        };
+
+        let extension = match path.extension() {
             Some(e) => e,
             None => continue,
         };
 
         if extension == OsStr::new("mp3") {
-            print!("{:?}: ", entry.path());
+            print!("{:?}: ", path);
 
-            let tag = match get_tag(entry.path()) {
+            let tag = match get_tag(&path) {
                 Ok(tag) => tag,
                 Err(e) => {
                     println!("{} ({})", Colour::Red.paint("failed"), e);
@@ -61,7 +66,7 @@ fn main()
             };
 
             if !args.flag_dry_run {
-                match tag.write_to_path(entry.path(), ::id3::Version::Id3v24) {
+                match tag.write_to_path(&path, ::id3::Version::Id3v24) {
                     Ok(_) => (),
                     Err(e) => {
                         println!("{} ({})", Colour::Red.paint("failed"), e);
