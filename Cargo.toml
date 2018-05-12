@@ -5,7 +5,7 @@ authors = ["Sanpi <sanpi@homecomputing.fr>"]
 
 [dependencies]
 id3 = "^0.2"
-docopt = "^0.8"
+docopt = "^1.0"
 serde = "^1.0"
 serde_derive = "^1.0"
 walkdir = "^2.0"
