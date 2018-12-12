@@ -1,15 +1,6 @@
 #![cfg_attr(feature="clippy", feature(plugin))]
 #![cfg_attr(feature="clippy", plugin(clippy))]
 
-extern crate id3;
-extern crate docopt;
-#[macro_use]
-extern crate serde_derive;
-extern crate serde;
-extern crate walkdir;
-extern crate regex;
-extern crate ansi_term;
-
 use id3::Tag;
 use std::ffi::OsStr;
 use docopt::Docopt;
@@ -19,7 +10,7 @@ use ansi_term::Colour;
 
 static USAGE: &'static str = "Usage: auto-tag [--dry-run] <path>";
 
-#[derive(Deserialize)]
+#[derive(serde_derive::Deserialize)]
 struct Args
 {
     flag_dry_run: bool,
@@ -66,7 +57,7 @@ fn main()
             };
 
             if !args.flag_dry_run {
-                match tag.write_to_path(&path, ::id3::Version::Id3v24) {
+                match tag.write_to_path(&path, id3::Version::Id3v24) {
                     Ok(_) => (),
                     Err(e) => {
                         println!("{} ({})", Colour::Red.paint("failed"), e);
