@@ -8,7 +8,7 @@ use walkdir::WalkDir;
 use regex::Regex;
 use ansi_term::Colour;
 
-static USAGE: &'static str = "Usage: auto-tag [--dry-run] <path>";
+static USAGE: &str = "Usage: auto-tag [--dry-run] <path>";
 
 #[derive(serde_derive::Deserialize)]
 struct Args
