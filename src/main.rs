@@ -1,6 +1,3 @@
-#![cfg_attr(feature="clippy", feature(plugin))]
-#![cfg_attr(feature="clippy", plugin(clippy))]
-
 use id3::Tag;
 use std::ffi::OsStr;
 use docopt::Docopt;
