@@ -1,32 +1,23 @@
 use id3::Tag;
 use std::ffi::OsStr;
-use docopt::Docopt;
 use walkdir::WalkDir;
 use regex::Regex;
 use ansi_term::Colour;
+use structopt::StructOpt;
 
-static USAGE: &str = "Usage: auto-tag [--dry-run] <path>";
-
-#[derive(serde_derive::Deserialize)]
-struct Args
+#[derive(StructOpt)]
+struct Opt
 {
-    flag_dry_run: bool,
-    arg_path: String,
+    #[structopt(long)]
+    dry_run: bool,
+    path: String,
 }
 
 fn main()
 {
-    let docopt = match Docopt::new(USAGE) {
-        Ok(d) => d,
-        Err(e) => e.exit(),
-    };
+    let opt = Opt::from_args();
 
-    let args: Args = match docopt.deserialize() {
-        Ok(args) => args,
-        Err(e) => e.exit(),
-    };
-
-    for entry in WalkDir::new(args.arg_path) {
+    for entry in WalkDir::new(opt.path) {
         let entry = match entry {
             Ok(e) => e,
             Err(_) => continue,
@@ -53,7 +44,7 @@ fn main()
                 },
             };
 
-            if !args.flag_dry_run {
+            if !opt.dry_run {
                 match tag.write_to_path(&path, id3::Version::Id3v24) {
                     Ok(_) => (),
                     Err(e) => {
