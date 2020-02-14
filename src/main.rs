@@ -1,3 +1,5 @@
+#![warn(rust_2018_idioms)]
+
 use id3::Tag;
 use std::ffi::OsStr;
 use walkdir::WalkDir;
