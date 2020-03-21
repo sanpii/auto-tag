@@ -77,7 +77,10 @@ fn get_tag(path: &std::path::Path) -> Result<Tag, String>
     };
 
     match captures.name("artist") {
-        Some(artist) => tag.set_artist(artist.as_str()),
+        Some(artist) => {
+            tag.set_artist(artist.as_str());
+            tag.set_album_artist(artist.as_str());
+        },
         None => return Err(String::from("no artist info")),
     };
 
