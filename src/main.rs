@@ -5,19 +5,19 @@ use std::ffi::OsStr;
 use walkdir::WalkDir;
 use regex::Regex;
 use ansi_term::Colour;
-use structopt::StructOpt;
+use clap::Parser;
 
-#[derive(StructOpt)]
+#[derive(Parser)]
 struct Opt
 {
-    #[structopt(long)]
+    #[clap(long)]
     dry_run: bool,
     path: String,
 }
 
 fn main()
 {
-    let opt = Opt::from_args();
+    let opt = Opt::parse();
 
     for entry in WalkDir::new(opt.path) {
         let entry = match entry {
