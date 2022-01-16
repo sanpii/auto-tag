@@ -1,6 +1,6 @@
 #![warn(rust_2018_idioms)]
 
-use id3::Tag;
+use id3::TagLike;
 use std::ffi::OsStr;
 use walkdir::WalkDir;
 use regex::Regex;
@@ -61,11 +61,11 @@ fn main()
     }
 }
 
-fn get_tag(path: &std::path::Path) -> Result<Tag, String>
+fn get_tag(path: &std::path::Path) -> Result<id3::Tag, String>
 {
-    let mut tag = match Tag::read_from_path(path) {
+    let mut tag = match id3::Tag::read_from_path(path) {
         Ok(tag) => tag,
-        Err(_) => Tag::new(),
+        Err(_) => id3::Tag::new(),
     };
 
     let regex = Regex::new(r"(?P<artist>[^/]+)/(?P<album>[^/]+)/(?P<track>\d+) - (?P<title>.+).mp3$")
