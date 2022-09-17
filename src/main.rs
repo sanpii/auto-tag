@@ -4,7 +4,7 @@ use id3::TagLike;
 use std::ffi::OsStr;
 use walkdir::WalkDir;
 use regex::Regex;
-use ansi_term::Colour;
+use nu_ansi_term::Color;
 use clap::Parser;
 
 #[derive(Parser)]
@@ -41,7 +41,7 @@ fn main()
             let tag = match get_tag(&path) {
                 Ok(tag) => tag,
                 Err(e) => {
-                    println!("{} ({})", Colour::Red.paint("failed"), e);
+                    println!("{} ({})", Color::Red.paint("failed"), e);
                     continue;
                 },
             };
@@ -50,13 +50,13 @@ fn main()
                 match tag.write_to_path(&path, id3::Version::Id3v24) {
                     Ok(_) => (),
                     Err(e) => {
-                        println!("{} ({})", Colour::Red.paint("failed"), e);
+                        println!("{} ({})", Color::Red.paint("failed"), e);
                         continue;
                     },
                 };
             }
 
-            println!("{}", Colour::Green.paint("ok"));
+            println!("{}", Color::Green.paint("ok"));
         }
     }
 }
