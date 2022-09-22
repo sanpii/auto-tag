@@ -10,7 +10,7 @@ use clap::Parser;
 #[derive(Parser)]
 struct Opt
 {
-    #[clap(long)]
+    #[arg(long)]
     dry_run: bool,
     path: String,
 }
