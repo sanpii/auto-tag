@@ -1,4 +1,4 @@
-#![warn(rust_2018_idioms)]
+#![warn(warnings)]
 
 use id3::TagLike;
 use std::ffi::OsStr;
