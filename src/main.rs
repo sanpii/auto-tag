@@ -36,7 +36,7 @@ fn main()
         };
 
         if extension == OsStr::new("mp3") {
-            print!("{:?}: ", path);
+            print!("{path:?}: ");
 
             let tag = match get_tag(&path) {
                 Ok(tag) => tag,
