@@ -20,19 +20,16 @@ fn main()
     let opt = Opt::parse();
 
     for entry in WalkDir::new(opt.path) {
-        let entry = match entry {
-            Ok(e) => e,
-            Err(_) => continue,
+        let Ok(entry) = entry else {
+            continue;
         };
 
-        let path = match entry.path().canonicalize() {
-            Ok(p) => p,
-            Err(_) => continue,
+        let Ok(path) = entry.path().canonicalize() else {
+            continue;
         };
 
-        let extension = match path.extension() {
-            Some(e) => e,
-            None => continue,
+        let Some(extension) = path.extension() else {
+            continue;
         };
 
         if extension == OsStr::new("mp3") {
@@ -71,9 +68,8 @@ fn get_tag(path: &std::path::Path) -> Result<id3::Tag, String>
     let regex = Regex::new(r"(?P<artist>[^/]+)/(?P<album>[^/]+)/(?P<track>\d+) - (?P<title>.+).mp3$")
         .unwrap();
 
-    let captures = match regex.captures(path.to_str().unwrap()) {
-        Some(c) => c,
-        None => return Err(String::from("incompatible path")),
+    let Some(captures) = regex.captures(path.to_str().unwrap()) else {
+        return Err(String::from("incompatible path"));
     };
 
     match captures.name("artist") {
