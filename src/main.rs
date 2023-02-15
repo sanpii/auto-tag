@@ -1,22 +1,20 @@
 #![warn(warnings)]
 
+use clap::Parser;
 use id3::TagLike;
+use nu_ansi_term::Color;
+use regex::Regex;
 use std::ffi::OsStr;
 use walkdir::WalkDir;
-use regex::Regex;
-use nu_ansi_term::Color;
-use clap::Parser;
 
 #[derive(Parser)]
-struct Opt
-{
+struct Opt {
     #[arg(long)]
     dry_run: bool,
     path: String,
 }
 
-fn main()
-{
+fn main() {
     let opt = Opt::parse();
 
     for entry in WalkDir::new(opt.path) {
@@ -40,7 +38,7 @@ fn main()
                 Err(e) => {
                     println!("{} ({})", Color::Red.paint("failed"), e);
                     continue;
-                },
+                }
             };
 
             if !opt.dry_run {
@@ -49,7 +47,7 @@ fn main()
                     Err(e) => {
                         println!("{} ({})", Color::Red.paint("failed"), e);
                         continue;
-                    },
+                    }
                 };
             }
 
@@ -58,15 +56,15 @@ fn main()
     }
 }
 
-fn get_tag(path: &std::path::Path) -> Result<id3::Tag, String>
-{
+fn get_tag(path: &std::path::Path) -> Result<id3::Tag, String> {
     let mut tag = match id3::Tag::read_from_path(path) {
         Ok(tag) => tag,
         Err(_) => id3::Tag::new(),
     };
 
-    let regex = Regex::new(r"(?P<artist>[^/]+)/(?P<album>[^/]+)/(?P<track>\d+) - (?P<title>.+).mp3$")
-        .unwrap();
+    let regex =
+        Regex::new(r"(?P<artist>[^/]+)/(?P<album>[^/]+)/(?P<track>\d+) - (?P<title>.+).mp3$")
+            .unwrap();
 
     let Some(captures) = regex.captures(path.to_str().unwrap()) else {
         return Err(String::from("incompatible path"));
@@ -76,7 +74,7 @@ fn get_tag(path: &std::path::Path) -> Result<id3::Tag, String>
         Some(artist) => {
             tag.set_artist(artist.as_str());
             tag.set_album_artist(artist.as_str());
-        },
+        }
         None => return Err(String::from("no artist info")),
     };
 
