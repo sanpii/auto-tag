@@ -11,6 +11,7 @@ use walkdir::WalkDir;
 struct Opt {
     #[arg(long)]
     dry_run: bool,
+    #[arg(default_value_t = String::from("."))]
     path: String,
 }
 
