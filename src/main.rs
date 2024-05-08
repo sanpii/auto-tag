@@ -3,7 +3,6 @@
 use clap::Parser;
 use id3::TagLike;
 use nu_ansi_term::Color;
-use regex::Regex;
 use std::ffi::OsStr;
 use walkdir::WalkDir;
 
@@ -63,36 +62,19 @@ fn get_tag(path: &std::path::Path) -> Result<id3::Tag, String> {
         Err(_) => id3::Tag::new(),
     };
 
-    let regex =
-        Regex::new(r"(?P<artist>[^/]+)/(?P<album>[^/]+)/(?P<track>\d+) - (?P<title>.+).mp3$")
-            .unwrap();
+    ctreg::regex! { Regex = r"(?P<artist>[^/]+)/(?P<album>[^/]+)/(?P<track>\d+) - (?P<title>.+).mp3$" };
+
+    let regex = Regex::new();
 
     let Some(captures) = regex.captures(path.to_str().unwrap()) else {
         return Err(String::from("incompatible path"));
     };
 
-    match captures.name("artist") {
-        Some(artist) => {
-            tag.set_artist(artist.as_str());
-            tag.set_album_artist(artist.as_str());
-        }
-        None => return Err(String::from("no artist info")),
-    };
-
-    match captures.name("album") {
-        Some(album) => tag.set_album(album.as_str()),
-        None => return Err(String::from("no album info")),
-    };
-
-    match captures.name("title") {
-        Some(title) => tag.set_title(title.as_str()),
-        None => return Err(String::from("no title info")),
-    };
-
-    match captures.name("track") {
-        Some(track) => tag.set_track(track.as_str().parse().unwrap()),
-        None => return Err(String::from("no track info")),
-    };
+    tag.set_artist(captures.artist.content);
+    tag.set_album_artist(captures.artist.content);
+    tag.set_album(captures.album.content);
+    tag.set_title(captures.title.content);
+    tag.set_track(captures.track.content.parse().unwrap());
 
     Ok(tag)
 }
