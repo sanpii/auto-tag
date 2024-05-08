@@ -34,7 +34,7 @@ fn main() {
             let tag = match get_tag(&path) {
                 Ok(tag) => tag,
                 Err(e) => {
-                    println!("{} ({})", Color::Red.paint("failed"), e);
+                    println!("{} ({e})", Color::Red.paint("failed"));
                     continue;
                 }
             };
@@ -43,7 +43,7 @@ fn main() {
                 match tag.write_to_path(&path, id3::Version::Id3v24) {
                     Ok(_) => (),
                     Err(e) => {
-                        println!("{} ({})", Color::Red.paint("failed"), e);
+                        println!("{} ({e})", Color::Red.paint("failed"));
                         continue;
                     }
                 };
