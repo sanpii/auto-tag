@@ -3,8 +3,6 @@
 use clap::Parser;
 use id3::TagLike;
 use nu_ansi_term::Color;
-use std::ffi::OsStr;
-use walkdir::WalkDir;
 
 #[derive(Parser)]
 struct Opt {
@@ -17,7 +15,7 @@ struct Opt {
 fn main() {
     let opt = Opt::parse();
 
-    for entry in WalkDir::new(opt.path) {
+    for entry in walkdir::WalkDir::new(opt.path) {
         let Ok(entry) = entry else {
             continue;
         };
@@ -30,7 +28,7 @@ fn main() {
             continue;
         };
 
-        if extension == OsStr::new("mp3") {
+        if extension == std::ffi::OsStr::new("mp3") {
             print!("{path:?}: ");
 
             let tag = match get_tag(&path) {
