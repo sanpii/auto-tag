@@ -31,7 +31,7 @@ fn main() {
         if extension == std::ffi::OsStr::new("mp3") {
             print!("{path:?}: ");
 
-            let tag = match get_tag(&path) {
+            let tag = match tag(&path) {
                 Ok(tag) => tag,
                 Err(e) => {
                     println!("{} ({e})", Color::Red.paint("failed"));
@@ -54,7 +54,7 @@ fn main() {
     }
 }
 
-fn get_tag(path: &std::path::Path) -> Result<id3::Tag, String> {
+fn tag(path: &std::path::Path) -> Result<id3::Tag, String> {
     let mut tag = match id3::Tag::read_from_path(path) {
         Ok(tag) => tag,
         Err(_) => id3::Tag::new(),
