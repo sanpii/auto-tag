@@ -2,7 +2,7 @@
 name = "tag"
 version = "0.1.0"
 authors = ["Sanpi <sanpi@homecomputing.fr>"]
-edition = "2021"
+edition = "2024"
 
 [dependencies]
 ctreg = "1.0"
