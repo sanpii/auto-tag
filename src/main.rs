@@ -28,7 +28,7 @@ fn main() {
             continue;
         };
 
-        if extension == std::ffi::OsStr::new("mp3") {
+        if extension == "mp3" {
             print!("{path:?}: ");
 
             let tag = match tag(&path) {
