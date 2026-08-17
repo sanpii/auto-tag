@@ -1,5 +1,3 @@
-#![warn(warnings)]
-
 use clap::Parser;
 use id3::TagLike;
 use nu_ansi_term::Color;
