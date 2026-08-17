@@ -4,6 +4,14 @@ use clap::Parser;
 use id3::TagLike;
 use nu_ansi_term::Color;
 
+type Result<T = ()> = anyhow::Result<T>;
+
+#[derive(Debug, thiserror::Error)]
+enum Error {
+    #[error("Incompatible path")]
+    IncompatiblePath,
+}
+
 #[derive(Parser)]
 struct Opt {
     #[arg(long)]
@@ -51,7 +59,7 @@ fn main() {
     }
 }
 
-fn tag(path: &std::path::Path) -> Result<id3::Tag, String> {
+fn tag(path: &std::path::Path) -> Result<id3::Tag> {
     let mut tag = match id3::Tag::read_from_path(path) {
         Ok(tag) => tag,
         Err(_) => id3::Tag::new(),
@@ -61,15 +69,15 @@ fn tag(path: &std::path::Path) -> Result<id3::Tag, String> {
 
     let regex = Regex::new();
 
-    let Some(captures) = regex.captures(path.to_str().unwrap()) else {
-        return Err(String::from("incompatible path"));
+    let Some(captures) = regex.captures(path.to_str().unwrap_or_default()) else {
+        return Err(Error::IncompatiblePath.into());
     };
 
     tag.set_artist(captures.artist.content);
     tag.set_album_artist(captures.artist.content);
     tag.set_album(captures.album.content);
     tag.set_title(captures.title.content);
-    tag.set_track(captures.track.content.parse().unwrap());
+    tag.set_track(captures.track.content.parse()?);
 
     Ok(tag)
 }

@@ -9,6 +9,8 @@ ctreg = "1.0"
 nu-ansi-term = "0.50"
 id3 = "1.0"
 walkdir = "^2.0"
+anyhow = "1.0.104"
+thiserror = "2.0.20"
 
 [dependencies.clap]
 version = "4.0"
