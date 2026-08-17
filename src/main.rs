@@ -46,7 +46,7 @@ fn main() {
                         println!("{} ({e})", Color::Red.paint("failed"));
                         continue;
                     }
-                };
+                }
             }
 
             println!("{}", Color::Green.paint("ok"));
