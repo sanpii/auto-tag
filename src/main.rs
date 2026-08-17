@@ -39,14 +39,11 @@ fn main() {
                 }
             };
 
-            if !opt.dry_run {
-                match tag.write_to_path(&path, id3::Version::Id3v24) {
-                    Ok(_) => (),
-                    Err(e) => {
-                        println!("{} ({e})", Color::Red.paint("failed"));
-                        continue;
-                    }
-                }
+            if !opt.dry_run
+                && let Err(err) = tag.write_to_path(&path, id3::Version::Id3v24)
+            {
+                println!("{} ({err})", Color::Red.paint("failed"));
+                continue;
             }
 
             println!("{}", Color::Green.paint("ok"));
