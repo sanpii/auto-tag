@@ -29,7 +29,7 @@ fn main() {
         };
 
         if extension == "mp3" {
-            print!("{path:?}: ");
+            print!("'{}': ", path.display());
 
             let tag = match tag(&path) {
                 Ok(tag) => tag,
